@@ -5,9 +5,12 @@
     <title>Рецепты</title>
 </head>
 <body>
+<p style="font-size: 25px; font-weight: bold">{{dish_type.capitalize}} {{dish.capitalize}}. Требуемые ингредиенты:</p>
+<ul>
 {% for ingredient, amount in recipe.items %}
-    <p>{{ ingredient }}: {{ amount }}</p>
+    <li style="color: black; font-family: Courier New; font-size: 20px">{{ ingredient }}: {{ amount }}</li>
 {% empty %}
+    </ul>>
     <p>Такого рецепта не знаю :(</p>
 {% endfor %}
 </body>
