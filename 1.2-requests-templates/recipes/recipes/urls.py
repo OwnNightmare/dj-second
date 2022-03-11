@@ -15,7 +15,7 @@ Including another URLconf
 """
 
 from django.urls import path
-from calculator import views
+from recipes.calculator import views
 
 
 urlpatterns = [

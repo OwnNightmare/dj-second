@@ -10,7 +10,7 @@
     <h5>
       <a href="{% url 'catalog' %}">Вернуться в каталог</a>
     </h5>
-    <h1>{{ phone.name }}</h1>
+    <h1>{{phone.name}}</h1>
   </div>
 
   <div class="content">
@@ -18,5 +18,6 @@
     <div>Стоимость: {{ phone.price }} ₽</div>
     <div>Дата выпуска: {{ phone.release_date }}</div>
     <div>LTE: {{ phone.lte_exists|yesno:'есть,нет' }}</div>
+  </div>
   </div>
 {% endblock %}
