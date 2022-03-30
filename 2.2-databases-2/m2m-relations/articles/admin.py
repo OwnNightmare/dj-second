@@ -7,22 +7,25 @@ from django.core.exceptions import ValidationError
 
 class TagArticleInlineFormset(BaseInlineFormSet):
     def clean(self):
-        self.forms.clear()
+        form_counter = 0
+        main_counter = 0
         for form in self.forms:
-            main_counter = 0
-            if main_counter > 0:
+            if len(form.cleaned_data) > 0:
+                if form_counter == 0:
+                    if form.cleaned_data.get('is_main') is False:
+                        raise ValidationError('Первым выберите основной тэг')
+                    else:
+                        main_counter += 1
+            if main_counter > 1:
                 raise ValidationError('Только одно поле может быть основным')
-            if form.cleaned_data.get('is_main'):
-                main_counter += 1
-                # main_tag_index = self.forms.index(form.cleaned_data)
-                # popped = self.forms.pop(main_tag_index)
-                # self.forms.insert(0, popped)
+            form_counter += 1
         return super().clean()
 
 
 class TagArticleInline(admin.TabularInline):
     model = TagArticle
     formset = TagArticleInlineFormset
+    extra = 0
 
 
 @admin.register(Article)
