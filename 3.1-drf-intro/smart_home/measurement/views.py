@@ -12,7 +12,7 @@ class AllObjectsView(ListAPIView):
     serializer_class = SensorSerializer
 
 
-class OneSensorView(RetrieveAPIView):
+class GetSensorView(RetrieveAPIView):
     queryset = Sensor.objects.all()
     serializer_class = DetailedSerializer
 
@@ -35,6 +35,7 @@ class UpdateSensorView(UpdateAPIView):
     queryset = Sensor.objects.all()
     serializer_class = SensorSerializer
     model = Sensor
-    fields = ['id', 'name', 'description']
+    fields = ['name', 'description']
+    template_name_suffix = '_update_form'
 
 
