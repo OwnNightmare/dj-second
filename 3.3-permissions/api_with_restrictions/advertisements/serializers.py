@@ -42,9 +42,9 @@ class AdvertisementSerializer(serializers.ModelSerializer):
         """Метод для валидации. Вызывается при создании и обновлении."""
 
         # TODO: добавьте требуемую валидацию
-        user_avs = Advertisement.objects.filter(creator=self.context['request'].user)
+        user_advs = Advertisement.objects.filter(creator=self.context['request'].user)
         open_counter = 0
-        for adv in user_avs:
+        for adv in user_advs:
             if adv.status == 'OPEN':
                 open_counter += 1
         if open_counter >= 10:

@@ -23,12 +23,11 @@ class AdvertisementViewSet(ModelViewSet):
     # filterset_fields = ['creator', 'status', 'created_at']
     search_fields = ['title', 'description', 'status']
     ordering_fields = ['created_at', 'updated_at']
-    # permission_classes = [IsAuthenticated, IsOwned]
+    permission_classes = [IsAuthenticated, IsOwned]
     throttle_classes = [UserRateThrottle, AnonRateThrottle]
 
     def get_permissions(self):
         """Получение прав для действий."""
         if self.action in ["create", "update", "partial_update", "destroy"]:
             return [IsOwned()]
-
         return []
