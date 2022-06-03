@@ -93,12 +93,13 @@ def test_post_one_course(client, student_factory, course_factory):
     counter_before = len(response_before.json())
 
     student = Student.objects.create(name='Me', birth_date='1995-01-01')
-    client.post('/api/v1/courses/', data={'name': 'Random course', 'student': student})
+    response_post = client.post('/api/v1/courses/', data={'name': 'Random course', 'student': student})
     response = client.get('/api/v1/courses/', {'student': student})
 
     response_after = client.get('/api/v1/courses/')
     counter_after = len(response_after.json())
 
+    assert response_post.status_code == 201
     assert response_before.status_code == 200
     assert response_after.status_code == 200
     assert counter_after - counter_before == 1
@@ -120,7 +121,7 @@ def test_patch_one_course(client, student_factory, course_factory):
     data_after = response_patch.json()
 
     assert response_get.status_code == 200
-
+    assert response_patch.status_code == 200
     assert data_before['name'] == 'Old course'
     assert data_after['name'] == new_name
 
@@ -139,6 +140,7 @@ def test_delete_one_course(client, student_factory, course_factory):
     response_after = client.get('/api/v1/courses/')
     course_amount_after = len(response_after.json())
 
+    assert deleting_response.status_code == 204
     assert response_before.status_code == 200
     assert response_after.status_code == 200
     assert course_amount_after + 1 == course_amount_before
