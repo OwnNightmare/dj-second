@@ -33,12 +33,13 @@ def test_get_python_course(client, course_factory, student_factory):
     # python.students.create(name='Yura', birth_date='1995-10-16')
 
     # Act:
-    response = client.get('/api/v1/courses/1/')
+    course_id = courses[0].id
+    response = client.get(f'/api/v1/courses/{course_id}/')
+    data = response.json()
 
     # Assert
     assert response.status_code == 200
-    data = response.json()
-    assert data.get('name') == 'Python' and data['id'] == 1
+    assert data.get('name') == 'Python' and data['id'] == course_id
 
 
 @pytest.mark.django_db
@@ -110,32 +111,36 @@ def test_post_one_course(client, student_factory, course_factory):
 def test_patch_one_course(client, student_factory, course_factory):
 
     student = Student.objects.create(name='Me', birth_date='1995-01-01')
-    course = course_factory(_quantity=1, name='Old course', id=1)
+    courses = course_factory(_quantity=1, name='Old course')
 
-    response_get = client.get('/api/v1/courses/1/')
+    course_id = courses[0].id
+    response_get = client.get('/api/v1/courses/', {'id': course_id})
 
     new_name = 'Old course version 2.0'
-    response_patch = client.patch('/api/v1/courses/1/', data={'name': new_name})
+    response_patch = client.patch(f'/api/v1/courses/{course_id}/', data={'name': new_name})
 
     data_before = response_get.json()
-    data_after = response_patch.json()
+    response_patch_data = response_patch.json()
 
     assert response_get.status_code == 200
     assert response_patch.status_code == 200
-    assert data_before['name'] == 'Old course'
-    assert data_after['name'] == new_name
+    assert len(response_get.json()) == 1
+    assert type(response_patch_data) == dict
+    assert data_before[0]['name'] == 'Old course'
+    assert response_patch_data['name'] == new_name
 
 
 @pytest.mark.django_db
 def test_delete_one_course(client, student_factory, course_factory):
 
     # good_course = Course.object.create(name='Useful course')
-    bad_course = course_factory(name='Bad course', id=2)
+    course = course_factory(name='Bad course', )
 
+    course_id = course.id
     response_before = client.get('/api/v1/courses/')
     course_amount_before = len(response_before.json())
 
-    deleting_response = client.delete('/api/v1/courses/2/')
+    deleting_response = client.delete(f'/api/v1/courses/{course_id}/')
 
     response_after = client.get('/api/v1/courses/')
     course_amount_after = len(response_after.json())
